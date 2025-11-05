@@ -86,7 +86,7 @@ void setup() {
   setupIoT();               // Paso 6. Inicializa el servicio de IoT
   hora = setTime();         // Paso 7. Ajusta el tiempo del dispositivo con servidores SNTP
   
-  // Mostrar versi?n al finalizar inicializaci?n (reutilizar variable ya declarada arriba)
+  // Mostrar version al finalizar inicializacion (reutilizar variable ya declarada arriba)
   Serial.println();
   Serial.println("========================================");
   Serial.print("Sistema inicializado - Firmware ");

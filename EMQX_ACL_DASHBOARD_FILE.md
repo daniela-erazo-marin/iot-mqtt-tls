@@ -160,4 +160,3 @@ Para verificar que el ACL funciona:
   - `#` = múltiples niveles (ej: `dispositivo/#`)
   - `${username}` = se reemplaza con el nombre de usuario del cliente
 
-¡Listo! Tu ACL debería estar configurado correctamente. 🎉

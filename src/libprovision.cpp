@@ -10,7 +10,7 @@ static const char FORM_HTML[] PROGMEM = R"HTML(
 <!doctype html><html><head><meta name='viewport' content='width=device-width, initial-scale=1'>
 <style>body{font-family:sans-serif;margin:24px}input,button{font-size:16px;padding:8px;margin:6px 0;width:100%}form{max-width:420px}</style>
 </head><body>
-  <h3>Configurar Wi‑Fi</h3>
+  <h3>Configurar Wi-Fi</h3>
   <form method='POST' action='/save'>
     <label>SSID</label>
     <input name='ssid' required>
