@@ -6,6 +6,7 @@
 
 # Archivos de configuración con secretos
 .env
+.env.template
 .env.local
 .env.*.local
 
