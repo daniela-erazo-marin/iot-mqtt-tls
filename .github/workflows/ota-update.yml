@@ -50,7 +50,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Publish MQTT OTA message
         run: |
@@ -58,7 +58,7 @@ jobs:
           python3 -c "import os, json, paho.mqtt.publish as publish; \
           url = 'https://{bucket}.s3.{region}.amazonaws.com/{firmware}'.format( \
             bucket=os.getenv('S3_BUCKET_NAME'), \
-            region=os.getenv('AWS_REGION'), \
+            region=os.getenv('AWS_DEFAULT_REGION'), \
             firmware=os.getenv('FIRMWARE_NAME') \
           ); \
           payload = json.dumps({ 'version': os.getenv('FIRMWARE_VERSION'), 'url': url }); \
@@ -76,7 +76,7 @@ jobs:
           DEVICE_TOPIC: dispositivo/device1/ota
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
           MQTT_SERVER: ${{ secrets.MQTT_SERVER }}
           MQTT_PORT: ${{ secrets.MQTT_PORT }}
