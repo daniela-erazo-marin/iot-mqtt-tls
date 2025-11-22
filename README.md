@@ -33,14 +33,20 @@ Proyecto base para ESP32 con MQTT seguro (TLS), provisión Wi‑Fi por portal AP
    MQTT_PASSWORD=supersecreto
    WIFI_SSID=MiWiFiInicial
    WIFI_PASSWORD=MiPassInicial
-   ROOT_CA=-----BEGIN CERTIFICATE-----\nMIIF...\n-----END CERTIFICATE-----
    ```
-   > **Nota**: `ROOT_CA` debe ir en una sola línea usando `\n` como saltos de línea. `WIFI_SSID/PASSWORD` son opcionales (se puede configurar luego por el portal AP).
+   > **Nota**: `ROOT_CA` usa el valor por defecto del código. Si necesitas cambiarlo, edita `src/secrets.cpp`. `WIFI_SSID/PASSWORD` son opcionales (se puede configurar luego por el portal AP).
 
 4. **Compilar y subir al ESP32**
+   
+   **Opción simple (recomendada):**
    ```bash
-   python scripts/build_with_env.py
    python scripts/build_with_env.py upload
+   ```
+   
+   **Opción manual:**
+   ```bash
+   set -a && source .env && set +a
+   pio run -t upload
    ```
 
 5. **Configurar Wi‑Fi** (primera vez o para cambiar)

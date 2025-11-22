@@ -14,6 +14,7 @@
 .pio/libdeps/
 .pio/.gcc-flags.json
 .pio/run/
+compile_commands.json
 
 # Archivos del sistema
 .DS_Store

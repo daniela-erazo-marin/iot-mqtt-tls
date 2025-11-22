@@ -36,6 +36,8 @@
 
 // Variables de entorno - se configuran en platformio.ini o .env
 // Los topicos deben tener la estructura: <país>/<estado>/<ciudad>/<usuario>/out
+// NOTA: Estas macros se definen desde el script add_env_defines.py usando variables del .env
+// Si no están definidas, se usan valores por defecto
 #ifndef COUNTRY
 #define COUNTRY "colombia"                        ///< País (definir vía .env)
 #endif
@@ -45,25 +47,27 @@
 #ifndef CITY
 #define CITY "tulua"                            ///< Ciudad (definir vía .env)
 #endif
+// MQTT_SERVER se define desde add_env_defines.py
+// Si no está definido, usar valor por defecto vacío
 #ifndef MQTT_SERVER
-#define MQTT_SERVER "mqtt.alvarosalazar.freeddns.org"                     ///< Servidor MQTT (definir vía .env)
+#define MQTT_SERVER ""
 #endif
 #ifndef MQTT_PORT
 #define MQTT_PORT 8883                            ///< Puerto seguro (TLS)
 #endif
 #ifndef MQTT_USER
-#define MQTT_USER "alvaro"                         ///< Usuario MQTT (definir vía .env)
+#define MQTT_USER "alvaro"                        ///< Usuario MQTT (definir vía .env)
 #endif
 #ifndef MQTT_PASSWORD
-#define MQTT_PASSWORD "supersecreto"                    ///< Contraseña MQTT (definir vía .env)
+#define MQTT_PASSWORD "supersecreto"              ///< Contraseña MQTT (definir vía .env)
 #endif
 
 // Variables de configuración de la red WiFi
 #ifndef WIFI_SSID
-#define WIFI_SSID "MAXELL_2.4_F2F"                       ///< SSID por defecto vacío; usar aprovisionamiento
+#define WIFI_SSID "MI_RED_WIFI"                ///< SSID por defecto; usar aprovisionamiento
 #endif
 #ifndef WIFI_PASSWORD
-#define WIFI_PASSWORD "a1b2c3d4"                   ///< Password por defecto vacío; usar aprovisionamiento
+#define WIFI_PASSWORD "a1b2c3d4"                  ///< Password por defecto; usar aprovisionamiento
 #endif
 
 // Alias para compatibilidad con el código existente
@@ -111,6 +115,8 @@ const char* root_ca = ROOT_CA;
 
 
 /* Constantes de configuración del servidor MQTT, no cambiar */
+// Los defines se aplican desde add_env_defines.py
+// Si MQTT_SERVER está definido pero vacío, se usará el valor por defecto del #ifndef
 const char* mqtt_server = MQTT_SERVER;            ///< Dirección de tu servidor MQTT
 const int mqtt_port = MQTT_PORT;                  ///< Puerto seguro (TLS)
 const char* mqtt_user = MQTT_USER;                ///< Usuario MQTT

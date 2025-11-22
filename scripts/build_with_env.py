@@ -1,72 +1,36 @@
 #!/usr/bin/env python3
 """
-Script simple para invocar PlatformIO. La inyección de defines desde
-.env/entorno la hace scripts/add_env_defines.py (extra_scripts).
-
-Uso:
-  python scripts/build_with_env.py            # compila
-  python scripts/build_with_env.py upload     # compila y sube
-
-Compatible con Windows, Linux y macOS.
+Script simple para compilar y subir el firmware con variables del .env
+Uso: python scripts/build_with_env.py [upload]
 """
-import os
-import sys
 import subprocess
-import shutil
+import sys
+import os
 from pathlib import Path
 
-def find_pio_command():
-    """
-    Busca el comando 'pio' o 'platformio' en el PATH
-    Compatible con Windows, Linux y macOS
-    """
-    # Probar primero 'pio'
-    pio_cmd = shutil.which('pio')
-    if pio_cmd:
-        return 'pio'
-    
-    # Probar 'platformio'
-    platformio_cmd = shutil.which('platformio')
-    if platformio_cmd:
-        return 'platformio'
-    
-    # Si no se encuentra, retornar 'pio' por defecto (puede estar en PATH)
-    return 'pio'
+# Cambiar al directorio del proyecto
+project_dir = Path(__file__).parent.parent
+os.chdir(project_dir)
 
-def build(target: str = 'run'):
-    """
-    Ejecuta PlatformIO con el target especificado
-    """
-    pio_cmd = find_pio_command()
-    cmd = [pio_cmd, 'run', '-e', 'esp32dev']
-    
-    if target == 'upload':
-        cmd.extend(['-t', 'upload'])
-    
-    # Mostrar comando que se ejecutará
-    print("Ejecutando:", ' '.join(cmd))
-    print("Directorio:", os.getcwd())
-    
-    try:
-        # Ejecutar con shell=True en Windows para mejor compatibilidad
-        shell_mode = (sys.platform == 'win32')
-        result = subprocess.run(cmd, shell=shell_mode, check=False)
-        return result
-    except FileNotFoundError:
-        print(f"\n❌ Error: No se encontró el comando '{pio_cmd}'")
-        print("   Asegúrate de que PlatformIO está instalado y en el PATH")
-        print("   Instala PlatformIO desde: https://platformio.org/install")
-        sys.exit(1)
-    except Exception as e:
-        print(f"\n❌ Error al ejecutar PlatformIO: {e}")
-        sys.exit(1)
+# Cargar variables del .env
+env_file = project_dir / '.env'
+if env_file.exists():
+    # Leer y exportar variables
+    with open(env_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                key = key.strip()
+                value = value.strip()
+                # Remover comillas si están presentes
+                if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+                    value = value[1:-1]
+                # Exportar al entorno
+                os.environ[key] = value
 
-if __name__ == '__main__':
-    # Cambiar al directorio del script para asegurar rutas correctas
-    script_dir = Path(__file__).parent.parent
-    os.chdir(script_dir)
-    
-    if len(sys.argv) > 1 and sys.argv[1] == 'upload':
-        sys.exit(build('upload').returncode)
-    else:
-        sys.exit(build('run').returncode)
+# Ejecutar pio
+if len(sys.argv) > 1 and sys.argv[1] == 'upload':
+    subprocess.run(['pio', 'run', '-t', 'upload'], check=True)
+else:
+    subprocess.run(['pio', 'run'], check=True)
