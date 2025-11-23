@@ -23,6 +23,7 @@
  */
 
 #include <WiFi.h>
+#include <Wire.h>
 #include <libiot.h>
 #include <libwifi.h>
 #include <libdisplay.h>
@@ -67,6 +68,13 @@ void setup() {
   }
   listWiFiNetworks();       // Paso 2. Lista las redes WiFi disponibles
   delay(1000);              // -- Espera 1 segundo para ver las redes disponibles
+  
+  // Inicializar I2C antes de usar la pantalla OLED (pines 8 y 7 para CCS811 y OLED)
+  // Esto debe hacerse antes de startDisplay() y setupIoT()
+  Wire.begin(8, 7);         // SDA=8, SCL=7 (mismos pines que usará CCS811)
+  Wire.setClock(100000);
+  delay(100);
+  
   startDisplay();           // Paso 3. Inicializa la pantalla OLED
   // Si no hay credenciales, iniciar modo provisioning (AP)
   if (!hasWiFiCredentials()) {
@@ -104,8 +112,9 @@ void loop() {
   checkWiFi();                                                   // Paso 1. Verifica la conexión a la red WiFi y si no está conectado, intenta reconectar
   checkMQTT();                                                   // Paso 2. Verifica la conexión al servidor MQTT y si no está conectado, intenta reconectar
   String message = checkAlert();                                 // Paso 3. Verifica si hay alertas y las retorna en caso de haberlas
-  if(measure(&data)){                                            // Paso 4. Realiza una medición de temperatura y humedad
-    displayLoop(message, hora, data.temperature, data.humidity); // Paso 5. Muestra en la pantalla el mensaje recibido, las medidas de temperatura y humedad
-    sendSensorData(data.temperature, data.humidity);             // Paso 6. Envía los datos de temperatura y humedad al servidor MQTT
+  if(measure(&data)){                                            // Paso 4. Realiza una medición de los sensores CCS811 y PMS7003
+    // Mostrar CO2 y PM2.5 en la pantalla (usando temperatura y humedad como placeholders temporales)
+    displayLoop(message, hora, data.co2, data.tvoc); // Paso 5. Muestra en la pantalla el mensaje recibido y los datos de los sensores
+    sendSensorData(&data);                                        // Paso 6. Envía los datos de los sensores al servidor MQTT
   }   
 }

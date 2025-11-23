@@ -29,10 +29,14 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Pantalla OL
 /**
  * Vincula la pantalla al dispositivo y asigna el color de texto blanco como predeterminado.
  * Si no es exitosa la vinculación, se muestra un mensaje en consola.
+ * NOTA: I2C debe estar inicializado antes de llamar a esta función.
  */
 void startDisplay() {
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Dirección 0x3D para 128x64
+  // I2C debe estar inicializado antes (se hace en setupSensors() o manualmente)
+  // Si no está inicializado, Wire.begin() se llamará automáticamente con pines por defecto
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Dirección 0x3C para 128x64
     Serial.println(F("SSD1306 allocation failed"));
+    Serial.println(F("Verifica la conexión I2C de la pantalla OLED"));
     for(;;); // No continúa si no se puede vincular la pantalla
   }
   display.setTextColor(SSD1306_WHITE); // Color de texto blanco
@@ -67,10 +71,10 @@ void displayHeader(time_t now) {  // Se recibe el tiempo actual como parámetro
  */
 void displayMeasures(float temp, float humi) {
   display.println("");
-  display.print("T: ");
+  display.print("Co2: ");
   display.print(temp);  // Se imprime la temperatura
   display.print("    ");
-  display.print("H: ");
+  display.print("tvoc: ");
   display.print(humi);  // Se imprime la humedad
   display.println("");
 }
